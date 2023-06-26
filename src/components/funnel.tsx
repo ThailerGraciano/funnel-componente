@@ -32,12 +32,12 @@ class FunnelChart extends React.Component<
         showValues: true,
         showNames: true,
         pallette: [
-            "#f14c14",
-            "#f39c35",
-            "#68BC00",
-            "#1d7b63",
-            "#4e97a8",
-            "#4466a3",
+            "#26749b",
+            "#26749b",
+            "#26749b",
+            "#26749b",
+            "#26749b",
+            "#26749b",
         ],
         showRunningTotal: false,
         heightRelativeToValue: false,
@@ -51,14 +51,9 @@ class FunnelChart extends React.Component<
     setFunnelRows() {
         const {
             data,
-            showNames,
-            showValues,
-            showRunningTotal,
             heightRelativeToValue,
             chartHeight,
             getRowStyle,
-            getRowNameStyle,
-            getRowValueStyle,
             decorateValue,
             getToolTip,
             onRowClick,
@@ -82,13 +77,9 @@ class FunnelChart extends React.Component<
         if (data) {
             for (var i1 = 0; i1 < data.length; i1++) {
                 const thisRow = data[i1];
-                let showTitle = true;
-                let showValue = true;
 
                 if (thisRow.value >= 0) {
                     let rowStyle: any = {};
-                    let rowTitleStyle: any = {};
-                    let rowValueStyle: any = {};
                     const decoratedValue =
                         typeof decorateValue === "function"
                             ? decorateValue(thisRow, i1, data)
@@ -97,24 +88,17 @@ class FunnelChart extends React.Component<
                     if (typeof getRowStyle === "function") {
                         rowStyle = getRowStyle(thisRow);
                     }
-                    if (typeof getRowNameStyle === "function") {
-                        rowTitleStyle = getRowNameStyle(thisRow);
-                    }
-                    if (typeof getRowValueStyle === "function") {
-                        rowValueStyle = getRowValueStyle(thisRow);
-                    }
-
-                    if (heightRelativeToValue) {
-                        const size = sizePerValue * thisRow.value;
-                        rowStyle.height = size + "px";
-                        rowStyle.maxHeight = size + "px";
-                        if (size < 65) {
-                            showValue = false;
-                        }
-                        if (size < 40) {
-                            showTitle = false;
-                        }
-                    }
+                    // if (heightRelativeToValue) {
+                    //     const size = sizePerValue * thisRow.value;
+                    //     rowStyle.height = size + "px";
+                    //     rowStyle.maxHeight = size + "px";
+                    //     if (size < 65) {
+                    //         showValue = false;
+                    //     }
+                    //     if (size < 40) {
+                    //         showTitle = false;
+                    //     }
+                    // }
                     if (thisRow.backgroundColor) {
                         rowStyle.backgroundColor = thisRow.backgroundColor;
                     }
@@ -125,14 +109,7 @@ class FunnelChart extends React.Component<
                             ];
                     }
 
-                    if (!showNames) {
-                        showTitle = false;
-                    }
-                    if (!showValues) {
-                        showValue = false;
-                    }
-
-                    let toolTip = thisRow.name + "\n" + runningTotal;
+                    let toolTip = thisRow.name;
                     if (typeof getToolTip === "function") {
                         toolTip = getToolTip(thisRow);
                     }
@@ -142,50 +119,20 @@ class FunnelChart extends React.Component<
                     }
 
                     rows.push(
-                        <div
-                            key={"funnel-pipeline-chart-row-" + thisRow.name}
-                            className="funnel-pipeline-chart-row"
-                            style={rowStyle}
-                            title={toolTip}
-                            onClick={
-                                typeof onRowClick === "function"
-                                    ? () => onRowClick(thisRow)
-                                    : undefined
-                            }
-                        >
-                            <div>
-                                <div
-                                    className="funnel-pipeline-chart-title"
-                                    style={rowTitleStyle}
-                                >
-                                    {thisRow.name}
-                                </div>
-                                <div
-                                    className="funnel-pipeline-chart-circle"
-                                    // style={rowTitleStyle}
-                                >
-                                    100%
-                                </div>
-
-                                {/* {showTitle ? (
-                                    <div
-                                        className="funnel-pipeline-chart-title"
-                                        style={rowTitleStyle}
-                                    >
-                                        {thisRow.name}
-                                    </div>
-                                ) : null}
-                                {showValue ? (
-                                    <div
-                                        className="funnel-pipeline-chart-value"
-                                        style={rowValueStyle}
-                                    >
-                                        {showRunningTotal
-                                            ? runningTotal
-                                            : decoratedValue}
-                                    </div> */}
-                                {/* ) : null} */}
-                            </div>
+                        <div className="funnel-pipeline-chart-row-backgound">
+                            <div
+                                key={
+                                    "funnel-pipeline-chart-row-" + thisRow.name
+                                }
+                                className="funnel-pipeline-chart-row"
+                                style={rowStyle}
+                                title={toolTip}
+                                onClick={
+                                    typeof onRowClick === "function"
+                                        ? () => onRowClick(thisRow)
+                                        : undefined
+                                }
+                            ></div>
                         </div>
                     );
                 }
@@ -222,11 +169,22 @@ class FunnelChart extends React.Component<
         }
 
         return (
-            <div className="funnel-pipeline-chart" style={chartStyles}>
-                {title ? (
-                    <h2 style={{ marginBottom: "30px" }}>{title}</h2>
-                ) : null}
-                {this.setFunnelRows()}
+            <div className="funnel-pipeline">
+                <div className="funnel-pipeline-prospects">PROSPECTS</div>
+                <div className="funnel-pipeline-leads">LEADS</div>
+                <div className="funnel-pipeline-oportunidades">
+                    OPORTUNIDADES
+                </div>
+                <div className="funnel-pipeline-vendas">VENDAS</div>
+
+                <div className="funnel-pipeline-background">
+                    <div className="funnel-pipeline-chart" style={chartStyles}>
+                        {title ? (
+                            <h2 style={{ marginBottom: "30px" }}>{title}</h2>
+                        ) : null}
+                        {this.setFunnelRows()}
+                    </div>
+                </div>
             </div>
         );
     }
